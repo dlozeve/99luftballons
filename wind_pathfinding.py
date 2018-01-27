@@ -26,15 +26,18 @@ def formatPath(path, city, day, data='validation'):
     else:
         raise ValueError('data argument must be "validation" or "test"')
 
-    return np.array([(city, day+offset, toHourMin(t), pos[0], pos[1]) for t, pos in enumerate(path)])
+    return np.array([(city, day+offset, toHourMin(t), pos[0], pos[1])
+                     for t, pos in enumerate(path)])
 
 
 def checkPath(path, start, goal, trueDayGrid):
     """Checks with the real data to see if a given path crashes or not"""
-    #/!\ The checker assumes that the path is correctly outputted, aka one entry every two minutes
-    # If there is a time gap in the moves, the checker will not know it and its output
-    # will be irrelevant. So check that your algo REALLY outputs one position for every two minutes
-    # (however no further entries are necesary when the goal has been reached) 
+    # /!\ The checker assumes that the path is correctly outputted,
+    # aka one entry every two minutes. If there is a time gap in the
+    # moves, the checker will not know it and its output will be
+    # irrelevant. So check that your algo REALLY outputs one position
+    # for every two minutes (however no further entries are necesary
+    # when the goal has been reached)
     prev = path[0]
     step = 0
     if path[0] != start:
@@ -71,10 +74,13 @@ def getSubmission(algo, cityData, predMatrix, nValidationDays, data='validation'
     tries = 0
     for day in range(nValidationDays):
         for city in range(10):
-            tries +=1
-            start, goal, path = getOnePath(algo, city+1, day, cityData, predMatrix, *args, **kwargs)
+            tries += 1
+            start, goal, path = getOnePath(algo, city+1, day,
+                                           cityData, predMatrix,
+                                           *args, **kwargs)
             if data == 'validation':
-                successes += checkPath(path, start, goal, trueGrid[day, :, :, :])
+                successes += checkPath(path, start, goal,
+                                       trueGrid[day, :, :, :])
             res.append(formatPath(path, city, day, data))
     if data == 'validation':
         print('Successes:', successes)
@@ -82,7 +88,8 @@ def getSubmission(algo, cityData, predMatrix, nValidationDays, data='validation'
     return np.concatenate(res)
 
 
-def showPath1h(start, goal, path, trueWind, i, figsize=(20, 10), figax=None, disp=True):
+def showPath1h(start, goal, path, trueWind, i, figsize=(20, 10),
+               figax=None, disp=True):
     zipped = list(zip(*path))
     xPath = list(zipped[0])
     yPath = list(zipped[1])

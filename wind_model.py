@@ -9,8 +9,8 @@ from xgboost import XGBClassifier
 # The prediction model for the wind
 # Takes as input the wind forecasts and outputs a new prediction
 # The prediction will be used by the pathfinding algorithm
-# Usually, the output would be the probability of being over 15 but it can be anything 
-# as long as the algo knows how to use it
+# Usually, the output would be the probability of being over 15 but it
+# can be anything as long as the algo knows how to use it
 
 model = LogisticRegression()
 modelName = 'Logit'

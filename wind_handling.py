@@ -9,15 +9,18 @@ cityFile = 'Data/CityData.csv'
 toFile = 'Data/METdata.h5'
 
 
-def make_h5(trainForecastPath=trainForecastPath, testForecastPath=testForecastPath, measurementPath=measurementPath, toFile=toFile):
+def make_h5(trainForecastPath=trainForecastPath,
+            testForecastPath=testForecastPath,
+            measurementPath=measurementPath, toFile=toFile):
     """Load the data and save it as a h5 file fore fast future loading"""
-    train = np.zeros((5, 20-3+1, 11, 548, 421))  # initialize an empty 5D tensor
+    # initialize an empty 5D tensor
+    train = np.zeros((5, 20-3+1, 11, 548, 421))
     print('start processing traindata')
     with open(trainForecastPath) as trainfile:
         for index, line in enumerate(trainfile):
-            #traindata format
-            #xid,yid,date_id,hour,model,wind
-            #1,1,1,3,1,13.8
+            # traindata format
+            # xid,yid,date_id,hour,model,wind
+            # 1,1,1,3,1,13.8
 
             traindata = line.split(',')
             try:
@@ -38,9 +41,9 @@ def make_h5(trainForecastPath=trainForecastPath, testForecastPath=testForecastPa
     print('start processing labeldata')
     with open(measurementPath) as labelfile:
         for index, line in enumerate(labelfile):
-            #labeldata format
-            #xid,yid,date_id,hour,wind
-            #1,1,1,3,12.8
+            # labeldata format
+            # xid,yid,date_id,hour,wind
+            # 1,1,1,3,12.8
             labeldata = line.split(',')
             try:
                 lx = int(labeldata[0])
@@ -59,9 +62,9 @@ def make_h5(trainForecastPath=trainForecastPath, testForecastPath=testForecastPa
     print('start processing testdata')
     with open(testForecastPath) as testfile:
         for index, line in enumerate(testfile):
-            #testdata format
-            #xid,yid,date_id,hour,model,wind
-            #1,1,1,3,1,13.8
+            # testdata format
+            # xid,yid,date_id,hour,model,wind
+            # 1,1,1,3,1,13.8
 
             testdata = line.split(',')
             try:
@@ -96,13 +99,15 @@ def getData(toFile=toFile, cityFile=cityFile):
     h5f.close()
 
     # At that point, the data has axes day*hour*model*x*y
-    # The train data has one more 'model' than the test, which is the actual measurement
+    # The train data has one more 'model' than the test, which is the
+    # actual measurement
     return citydata, train, test
 
 
 def splitTrainVal(train, nTrainDays, nValidationDays, useModels, test=False):
-    """Splits the train data into one set for training of the predictor and the other to validate
-        the prediction and the pathfindin"""
+    """Splits the train data into one set for training of the predictor
+        and the other to validate the prediction and the pathfindin
+    """
     if not test:
         useModels = useModels+[10]
     trainData = train[:nTrainDays, :, useModels, :, :]
@@ -114,7 +119,8 @@ def splitTrainVal(train, nTrainDays, nValidationDays, useModels, test=False):
     x_train = trainData[:, 0:-1]
     y_train = trainData[:, -1]
 
-    valData = train[nTrainDays:(nValidationDays+nTrainDays), :, useModels, :, :]
+    valData = train[nTrainDays:(nValidationDays+nTrainDays),
+                    :, useModels, :, :]
     valData = np.rollaxis(valData, 2, 5)
     valData = valData.reshape(-1, trainData.shape[-1])
     x_val = valData[:, 0:-1]

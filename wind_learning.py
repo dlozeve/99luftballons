@@ -38,15 +38,18 @@ def formatPrediction(pred_val, y_val, nValidationDays):
     return predMatrix, trueMatrix
 
 
-def evaluatePrediction(pred_train, pred_val, y_train, y_val, nValidationDays, thresh):
+def evaluatePrediction(pred_train, pred_val, y_train, y_val,
+                       nValidationDays, thresh):
     # Generate the confusion matrix
     tn, fp, fn, tp = confusion_matrix(y_val >= 15, pred_val > thresh).ravel()
     print('False negative rate (most important metric):', fn/(fn+tn))
     print('False positive rate:', fp/(fp+tp))
 
-    # Plot the actual wind speed against the predicted probability of being over 15
+    # Plot the actual wind speed against the predicted probability of
+    # being over 15
     indices = np.random.choice(pred_train.shape[0], 5000)
-    fig, (ax1, ax2) = plt.subplots(ncols=2, figsize=(10, 5), sharex=True, sharey=True)
+    fig, (ax1, ax2) = plt.subplots(ncols=2, figsize=(10, 5),
+                                   sharex=True, sharey=True)
 
     ax1.scatter(pred_train[indices], y_train[indices])
     ax2.scatter(pred_val[indices], y_val[indices])
@@ -62,13 +65,18 @@ def evaluatePrediction(pred_train, pred_val, y_train, y_val, nValidationDays, th
 
     ax1.set_ylabel('Actual wind speed')
 
-    ax1.text(0.25, 5, 'TN', color='black', size=30, horizontalalignment='center')
-    ax1.text(0.25, 25, 'FN', color='r', size=30, horizontalalignment='center')
-    ax1.text(0.75, 25, 'TP', color='black', size=30, horizontalalignment='center')
-    ax1.text(0.75, 5, 'FP', color='black', size=30, horizontalalignment='center')
+    ax1.text(0.25, 5, 'TN', color='black', size=30,
+             horizontalalignment='center')
+    ax1.text(0.25, 25, 'FN', color='r', size=30,
+             horizontalalignment='center')
+    ax1.text(0.75, 25, 'TP', color='black', size=30,
+             horizontalalignment='center')
+    ax1.text(0.75, 5, 'FP', color='black', size=30,
+             horizontalalignment='center')
     plt.draw()
 
-    # Show the prediction difference on a map for the first hour of the first validation day
+    # Show the prediction difference on a map for the first hour of
+    # the first validation day
     predMatrix = pred_val.reshape(nValidationDays, 18, 548, 421, 1)
     trueMatrix = y_val.reshape(nValidationDays, 18, 548, 421)
 
@@ -81,6 +89,7 @@ def evaluatePrediction(pred_train, pred_val, y_train, y_val, nValidationDays, th
     ax2.set_xlabel('Prediction')
 
     fig, ax = plt.subplots(figsize=(20, 10))
-    ax.imshow(np.logical_xor(trueMatrix[0, 0, :, :].T > 15, predMatrix[0, 0, :, :, 0].T > thresh))
+    ax.imshow(np.logical_xor(trueMatrix[0, 0, :, :].T > 15,
+                             predMatrix[0, 0, :, :, 0].T > thresh))
     ax.set_xlabel('Yellow: wrong prediction, purple: right prediction')
     plt.draw()

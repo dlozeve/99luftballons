@@ -1,5 +1,6 @@
 # This file should contain the pathfinding algorithm
-# It takes as input a matrix *dayGrid* which is the output of the prediction model for the given day
+# It takes as input a matrix *dayGrid* which is the output of the
+# prediction model for the given day
 # it is for shape 18*548*421, ie hour*x*y
 # The start and goal coordinates are (x,y) tuples
 # Its output should be a path formatted as a list of tuples (x,y)
@@ -10,10 +11,11 @@ def stupidAlgo(start, goal, dayGrid):
     path = [pos]
     step = 0
     while pos != goal:
-        # This part is quite useless here and just to illustrate getting the current score from the matrix
+        # This part is quite useless here and just to illustrate
+        # getting the current score from the matrix
         hour = (step*2)//30
         pos_score = dayGrid[hour, pos[0], pos[1]]
-        if pos_score>0.9:
+        if pos_score > 0.9:
             print("Almost certain crash")
             return path
 
